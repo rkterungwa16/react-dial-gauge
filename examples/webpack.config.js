@@ -3,6 +3,12 @@ const webpack = require('webpack')
 const path = require('path')
 
 module.exports = {
+  mode: 'development',
+  output: {
+    filename: 'bundle.js',
+    chunkFilename: '[id][hash].js',
+    publicPath: '/'
+  },
   module: {
     rules: [
       {
@@ -49,8 +55,9 @@ module.exports = {
   ],
 
   devServer: {
-    contentBase: path.join(__dirname, 'lib/'),
+    contentBase: path.join(__dirname, '/'),
     compress: true,
     port: 9000
-  }
+  },
+  devtool: 'source-map'
 }

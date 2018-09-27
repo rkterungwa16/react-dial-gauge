@@ -1,6 +1,23 @@
 import React from 'react'
 
+/**
+ * A react component to render a  radial dial gauge
+ */
 class ReactDialGauge extends React.Component {
+  /**
+   *
+   * @param {*} props
+   */
+  constructor (props) {
+    super(props)
+    this.state = {
+      value: ''
+    }
+  }
+
+  /**
+   * @return {Object} html object
+   */
   render () {
     return (
       <div className='container A'>

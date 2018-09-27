@@ -4,6 +4,7 @@
   "description": "A react component to render an svg dial gauge",
   "main": "index.js",
   "scripts": {
+    "start": "webpack-dev-server --open --config ./examples/webpack.config.js ./examples/index.js",
     "test": "jest",
     "build": "webpack --mode production ./src/index.js --output ./lib/index.js",
     "example": "webpack-dev-server --open --mode development ./examples/index.js --output ./examples/lib/index.js"

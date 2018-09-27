@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ReactDialGauge from '../src'
+import ReactDialGauge from '../src/ReactDialGauge.jsx'
 
 const App = () => (
   <div>

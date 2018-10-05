@@ -95,6 +95,33 @@ class ReactDialGauge extends React.PureComponent {
 
   /**
    *
+   * @param {Object} needleConfig
+   * @return {String} needle path definition
+   */
+  drawNeedle (needleConfig) {
+    const {
+      startingPosXCoord,
+      startingPosYCoord,
+      arcRadius,
+      rad,
+      arcAngle
+    } = needleConfig
+
+    const nx1 = startingPosXCoord + 5 * Math.cos((arcAngle - 90) * rad)
+    const ny1 = startingPosYCoord + 5 * Math.sin((arcAngle - 90) * rad)
+
+    const nx2 = startingPosXCoord + (arcRadius + 15) * Math.cos(arcAngle * rad)
+    const ny2 = startingPosYCoord + (arcRadius + 15) * Math.sin(arcAngle * rad)
+
+    const nx3 = startingPosXCoord + 5 * Math.cos((arcAngle + 90) * rad)
+    const ny3 = startingPosYCoord + 5 * Math.sin((arcAngle + 90) * rad)
+
+    return `
+    ${nx1},${ny1} ${nx2},${ny2} ${nx3},${ny3}`
+  }
+
+  /**
+   *
    * @param {Object} arcConfigSettings
    * @return {String} arc path definition
    */
@@ -173,6 +200,14 @@ class ReactDialGauge extends React.PureComponent {
       arcAngle
     })
 
+    const needle = this.drawNeedle({
+      startingPosXCoord,
+      startingPosYCoord,
+      arcRadius,
+      rad,
+      arcAngle
+    })
+
     return (
       <div>
         <svg
@@ -190,6 +225,10 @@ class ReactDialGauge extends React.PureComponent {
           <path
             fill='#399988'
             d={arc}
+          />
+          <polygon
+            fill='red'
+            points={needle}
           />
         </svg>
       </div>

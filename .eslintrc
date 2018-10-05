@@ -46,6 +46,7 @@
         ]
       }
     ],
+    "class-methods-use-this": "off",
     "space-before-function-paren": [
       "error",
       {

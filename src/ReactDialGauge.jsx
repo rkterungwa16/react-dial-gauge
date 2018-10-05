@@ -160,6 +160,7 @@ class ReactDialGauge extends React.PureComponent {
    * @return {Object} render arc
    */
   render () {
+    const level = 'Level1'
     const {
       svgHeight,
       svgWidth
@@ -221,6 +222,7 @@ class ReactDialGauge extends React.PureComponent {
           <path
             fill='#0f4534'
             d={semiCircle}
+            id='txt-path'
           />
           <path
             fill='#399988'
@@ -229,6 +231,15 @@ class ReactDialGauge extends React.PureComponent {
           <polygon
             fill='red'
             points={needle}
+          />
+
+          <circle
+            cx={svgWidth / 2}
+            cy='165'
+            r='40'
+            stroke=''
+            strokeWidth='3'
+            fill='#399988'
           />
         </svg>
       </div>

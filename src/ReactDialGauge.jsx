@@ -18,8 +18,10 @@ class ReactDialGauge extends React.PureComponent {
       startingPosXCoord: svgWidth / 2,
       startingPosYCoord: 160,
       offsetFromOrigin: 40,
-      initialValue: 18
+      initialValue: 80,
+      innerArcFillColor: '#F94F5B'
     }
+    this.drawMultipleScaleLine = this.drawMultipleScaleLine.bind(this)
   }
 
   /**
@@ -38,7 +40,7 @@ class ReactDialGauge extends React.PureComponent {
    * @return {Number} thickness of arc
    */
   getArcThickness (arcRadius) {
-    return arcRadius / 2
+    return arcRadius / 4
   }
 
   /**
@@ -59,6 +61,95 @@ class ReactDialGauge extends React.PureComponent {
     p.y = startingPosYCoord + arcRadius * Math.sin((initialValue - 180) * rad)
 
     return Math.atan2(startingPosYCoord - p.y, startingPosXCoord - p.x) / rad - 180
+  }
+
+  /**
+   *
+   * @param {Object} lineConfig
+   *
+   * @return {Object} svg line element
+   */
+  drawScaleLine (lineConfig) {
+    const {
+      x1,
+      y1,
+      x2,
+      y2,
+      x,
+      y,
+      index,
+      content
+    } = lineConfig
+
+    return (
+      <g>
+        <line
+          index={index}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke='#aaa'
+          strokeWidth='2'
+        />
+        <text
+          index={index}
+          x={x}
+          y={y}
+          fill='#aaa'
+          textAnchor='middle'
+          dominantBaseline='alphabetic'
+          font='12px verdana, sans-serif'
+        >
+          {content}
+
+        </text>
+      </g>
+    )
+  }
+
+  /**
+   *
+   * @param {*} config
+   *
+   * @return{*} Dom element
+   */
+  drawMultipleScaleLine (config) {
+    const {
+      arcRadius,
+      arcThickness,
+      startingPosXCoord,
+      startingPosYCoord,
+      rad
+    } = config
+    const outerScaleRadius = arcRadius + 5
+    const innerScaleRadius = (arcRadius - arcThickness) - 5
+    const scaleRadiusT = arcRadius + 20
+    const lines = []
+    let n = 0
+    for (let scaleAngle = -180; scaleAngle <= 0; scaleAngle += 30) {
+      if (scaleAngle === -30 || scaleAngle === -90 || scaleAngle === -150
+      ) {
+        const outerScaleRadiusXCoord = startingPosXCoord + outerScaleRadius * Math.cos(scaleAngle * rad)
+        const outerScaleRadiusYCoord = startingPosYCoord + outerScaleRadius * Math.sin(scaleAngle * rad)
+        const innerScaleRadiusXCoord = startingPosXCoord + innerScaleRadius * Math.cos(scaleAngle * rad)
+        const innerScaleRadiusYCoord = startingPosYCoord + innerScaleRadius * Math.sin(scaleAngle * rad)
+        const scaleRadiusTX = startingPosXCoord + scaleRadiusT * Math.cos(scaleAngle * rad)
+        const scaleRadiusTY = startingPosYCoord + scaleRadiusT * Math.sin(scaleAngle * rad)
+        lines.push(this.drawScaleLine({
+          index: scaleAngle,
+          content: `Level ${n}`,
+          x1: outerScaleRadiusXCoord,
+          y1: outerScaleRadiusYCoord,
+          x2: innerScaleRadiusXCoord,
+          y2: innerScaleRadiusYCoord,
+          x: scaleRadiusTX,
+          y: scaleRadiusTY
+        }))
+        n += 1
+      }
+    }
+    return lines
   }
 
   /**
@@ -160,7 +251,6 @@ class ReactDialGauge extends React.PureComponent {
    * @return {Object} render arc
    */
   render () {
-    const level = 'Level1'
     const {
       svgHeight,
       svgWidth
@@ -170,6 +260,7 @@ class ReactDialGauge extends React.PureComponent {
       startingPosYCoord,
       offsetFromOrigin,
       initialValue,
+      innerArcFillColor,
       rad
 
     } = this.state
@@ -218,14 +309,22 @@ class ReactDialGauge extends React.PureComponent {
           viewBox='0 0 330 165'
         >
 
-          <g className='scale' stroke='red' />
+          <g className='scale' stroke='red'>
+            {this.drawMultipleScaleLine({
+              arcRadius,
+              arcThickness,
+              startingPosXCoord,
+              startingPosYCoord,
+              rad
+            })}
+          </g>
           <path
-            fill='#0f4534'
+            fill='#34A498'
             d={semiCircle}
             id='txt-path'
           />
           <path
-            fill='#399988'
+            fill={innerArcFillColor}
             d={arc}
           />
           <polygon
@@ -233,14 +332,26 @@ class ReactDialGauge extends React.PureComponent {
             points={needle}
           />
 
-          <circle
-            cx={svgWidth / 2}
-            cy='165'
-            r='40'
-            stroke=''
-            strokeWidth='3'
-            fill='#399988'
-          />
+          <g>
+            <circle
+              cx={svgWidth / 2}
+              cy='165'
+              r='40'
+              stroke=''
+              strokeWidth='3'
+              fill='#399988'
+            />
+            <text
+              x='50%'
+              y='150'
+              textAnchor='middle'
+              stroke='#51c5cf'
+              strokeWidth='2px'
+              dy='.3em'
+            >
+              {initialValue}
+            </text>
+          </g>
         </svg>
       </div>
     )
